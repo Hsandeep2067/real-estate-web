@@ -1,0 +1,19 @@
+{
+  "name": "real-estate-landing-page",
+  "version": "1.0.0",
+  "description": "A fully functional real estate landing page",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "real-estate",
+    "landing-page",
+    "html",
+    "css",
+    "javascript"
+  ],
+  "author": "Premium Properties",
+  "license": "MIT"
+}
