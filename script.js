@@ -162,8 +162,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelectorAll('nav a');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
+            // Check if it's a dropdown link
+            if (this.parentElement.querySelector('.properties-dropdown')) {
+                return; // Let the dropdown handle this
+            }
+            
             e.preventDefault();
             const targetId = this.getAttribute('href');
+            
+            // Handle external links
+            if (targetId.startsWith('http') || targetId.startsWith('mailto') || targetId.startsWith('tel')) {
+                window.location.href = targetId;
+                return;
+            }
+            
+            // Handle internal links
             const targetSection = document.querySelector(targetId);
             
             if (targetSection) {
@@ -173,6 +186,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (window.innerWidth <= 768) {
                     nav.style.display = 'none';
                 }
+            } else if (targetId.includes('.html')) {
+                // If it's a page link, navigate to the page
+                window.location.href = targetId;
             }
         });
     });
@@ -184,6 +200,36 @@ document.addEventListener('DOMContentLoaded', function() {
             const targetSection = document.querySelector('#properties');
             if (targetSection) {
                 targetSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+    
+    // Header scroll effect
+    window.addEventListener('scroll', function() {
+        const header = document.querySelector('header');
+        if (window.scrollY > 50) {
+            header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+            header.style.padding = '10px 0';
+        } else {
+            header.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+            header.style.padding = '20px 0';
+        }
+    });
+    
+    // Properties dropdown functionality
+    const propertiesLinks = document.querySelectorAll('nav ul li:nth-child(2) > a');
+    const propertiesDropdowns = document.querySelectorAll('.properties-dropdown');
+    
+    propertiesLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            if (window.innerWidth <= 768) {
+                e.preventDefault();
+                const dropdown = this.nextElementSibling;
+                if (dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                } else {
+                    dropdown.style.display = 'block';
+                }
             }
         });
     });
@@ -383,4 +429,23 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = 'contact.html';
         });
     }
+    
+    // Set active class for current page
+    const currentPage = window.location.pathname.split('/').pop();
+    const navLinks = document.querySelectorAll('nav ul li a');
+    
+    navLinks.forEach(link => {
+        // Remove any existing active classes
+        link.classList.remove('active');
+        
+        // Add active class to current page link
+        if (link.getAttribute('href') === currentPage) {
+            link.classList.add('active');
+        }
+        
+        // Special case for index.html
+        if (currentPage === '' && link.getAttribute('href') === 'index.html') {
+            link.classList.add('active');
+        }
+    });
 });
